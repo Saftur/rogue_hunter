@@ -6,6 +6,7 @@ import rogue.world.World;
 
 public class Creature {
 	protected World world;
+	public String name;
 	
 	public int x;
 	public int y;
@@ -18,6 +19,8 @@ public class Creature {
 
 	public int attackValue;
 	public int defenseValue;
+	
+	public int xpgain;
 	
 	public void enter(int x, int y) { }
 	
@@ -33,16 +36,20 @@ public class Creature {
         int dmg = Math.max(0, attacker.attackValue - defenseValue);
     
         dmg = (int)(Math.random() * dmg) + 1;
-        
+
+        world.message(attacker.name+" attacked "+this.name+" for "+dmg+" dmg");
         if (hp-dmg <= 0) {
         	hp = 0;
         	world.remove(this);
+        	attacker.addXp(xpgain);
         } else {
         	hp -= dmg;
         }
 	}
 	
-	public Creature(World world, char glyph, Color color, int maxHp, int attack, int defense){
+	public void addXp(int amount) { }
+	
+	public Creature(World world, char glyph, Color color, int maxHp, int attack, int defense, int xpgain, String name){
 	    this.world = world;
 	    this.glyph = glyph;
 	    this.color = color;
@@ -50,6 +57,8 @@ public class Creature {
 	    this.hp = maxHp;
 	    this.attackValue = attack;
 	    this.defenseValue = defense;
+	    this.xpgain = xpgain;
+	    this.name = name;
 	    moveToEmpty();
 	}
 	

@@ -13,12 +13,14 @@ public class World {
 	public int height;
 	
 	public List<Creature> creatures;
+	public List<String> messages;
 	
 	public World(GenType type, int width, int height) {
 		this.width = width;
 		this.height = height;
 		tiles = Gen.gen(type, width, height);
 		creatures = new ArrayList<Creature>();
+		messages = new ArrayList<String>();
 	}
     
     public Tile tile(int x, int y){
@@ -55,5 +57,9 @@ public class World {
 
 	public void remove(Creature creature) {
 		creatures.remove(creature);
+	}
+	
+	public void message(String text) {
+		messages.add(text);
 	}
 }

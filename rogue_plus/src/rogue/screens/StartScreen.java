@@ -3,7 +3,7 @@ package rogue.screens;
 import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
-import rogue.ApplicationMain;
+import rogue.RoguePlus;
 
 public class StartScreen implements Screen {
 	private char hrzchr = (char)205;
@@ -14,8 +14,8 @@ public class StartScreen implements Screen {
 	private char brcchr = (char)201;
 	private char tblchr = (char)185;
 	private char tbrchr = (char)204;
-	private char tlrchr = (char)202;
-	private char blrchr = (char)203;
+	/*private char tlrchr = (char)202;
+	private char blrchr = (char)203;*/
 	
 	private void displayIntro(AsciiPanel terminal) {
 		String text[] = new String[23];
@@ -88,19 +88,15 @@ public class StartScreen implements Screen {
 		terminal.writeCenter("All Rights Reserved", 14, AsciiPanel.yellow);
 		terminal.writeCenter("Based on 1983 \"Rogue\" by Artificial Intelligence Design", 17);
 		terminal.writeCenter("Sign your name, and enter the dungeon:", 20, AsciiPanel.green);
-		if (ApplicationMain.pname.length() > 0) {
-			String name_text = ApplicationMain.pname;
-			for (int i=0;i<38-ApplicationMain.pname.length();i++) {
-				name_text += '_';
-			}
-			terminal.writeCenter(name_text, 21, AsciiPanel.brightCyan);
-		} else {
-			terminal.writeCenter("______________________________________", 21, AsciiPanel.brightCyan);
+		String name_text = RoguePlus.pname;
+		for (int i=0;i<16-RoguePlus.pname.length();i++) {
+			name_text += '_';
 		}
+		terminal.writeCenter(name_text, 21, AsciiPanel.brightCyan);
 	}
 	
 	private void displayVersion(AsciiPanel terminal) {
-		terminal.writeRight(ApplicationMain.version_text, 23);
+		terminal.writeRight(RoguePlus.version_text, 23);
 	}
 	
 	public void displayOutput(AsciiPanel terminal) {
@@ -111,10 +107,10 @@ public class StartScreen implements Screen {
 	public Screen respondToUserInput(KeyEvent key) {
 		char chr = key.getKeyChar();
 		int code = key.getKeyCode();
-		if (code == KeyEvent.VK_BACK_SPACE && ApplicationMain.pname.length() > 0) {
-			ApplicationMain.pname = ApplicationMain.pname.substring(0,ApplicationMain.pname.length()-1);
-		} else if ((Character.isLetter(chr) || chr == ' ') && ApplicationMain.pname.length() < 38) {
-			ApplicationMain.pname += chr;
+		if (code == KeyEvent.VK_BACK_SPACE && RoguePlus.pname.length() > 0) {
+			RoguePlus.pname = RoguePlus.pname.substring(0,RoguePlus.pname.length()-1);
+		} else if ((Character.isLetter(chr) || chr == ' ') && RoguePlus.pname.length() < 16) {
+			RoguePlus.pname += chr;
 		} else if (code == KeyEvent.VK_ENTER) {
 			return new GameScreen();
 		}

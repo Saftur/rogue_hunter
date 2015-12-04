@@ -9,14 +9,14 @@ import asciiPanel.AsciiPanel;
 import rogue.screens.Screen;
 import rogue.screens.StartScreen;
 
-public class ApplicationMain extends JFrame implements KeyListener {
+public class RoguePlus extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -2007269423561740435L;
 	
 	public static int[] version = new int[3];
 	public static String version_text;
 	
 	public static String pname;
-	public static int round_num;
+	public static long round_num;
 	
 	private AsciiPanel terminal;
 	private Screen screen;
@@ -30,7 +30,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
 
     public void keyTyped(KeyEvent e) { }
     
-    public ApplicationMain() {
+    public RoguePlus() {
     	super();
     	char[] lastVersion = FileReader.readFileChar("changelog.txt");
     	String[] vt = new String[]{"","",""};
@@ -65,7 +65,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
     }
     
     public static void main(String[] args) {
-        ApplicationMain app = new ApplicationMain();
+        RoguePlus app = new RoguePlus();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);
     }

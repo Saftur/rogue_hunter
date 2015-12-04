@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
 
-public class PauseScreen implements Screen {
+public class SettingsScreen implements Screen {
 	private char hrzchr = (char)205;
 	private char vrtchr = (char)186;
 	private char blcchr = (char)187;
@@ -19,7 +19,7 @@ public class PauseScreen implements Screen {
 	private Screen lastScreen;
 	
 	private int option;
-	private String[] options = new String[]{"Resume","Settings","Menu"};
+	private String[] options = new String[]{"Return"};
 	
 	public void displayFrame(AsciiPanel terminal) {
 		String text[] = new String[23];
@@ -67,7 +67,7 @@ public class PauseScreen implements Screen {
 	
 	public void displayOutput(AsciiPanel terminal) {
 		displayFrame(terminal);
-		terminal.writeCenter("Pause Menu", 3);
+		terminal.writeCenter("Settings Menu", 3);
 		displayOptions(terminal);
 	}
 
@@ -78,15 +78,13 @@ public class PauseScreen implements Screen {
 		case KeyEvent.VK_SPACE: case KeyEvent.VK_ENTER:
 			switch (option) {
 			case 0: return lastScreen;
-			case 1: return new SettingsScreen(this);
-			case 2: return new StartScreen();
 			} break;
 		case KeyEvent.VK_ESCAPE: return lastScreen;
 		}
 		return this;
 	}
 	
-	public PauseScreen(Screen lastScreen) {
+	public SettingsScreen(Screen lastScreen) {
 		this.lastScreen = lastScreen;
 	}
 }

@@ -65,9 +65,9 @@ public class Gen {
 	}
 	
 	public static Tile[][] gen(GenType type, int width, int height) {
-		if (type == type.CAVE) {
+		if (type == GenType.CAVE) {
 			return caveGen(width, height);
-		} else if (type == type.DUNGEON) {
+		} else if (type == GenType.DUNGEON) {
 			return dungeonGen(width, height);
 		} else {
 			return null;

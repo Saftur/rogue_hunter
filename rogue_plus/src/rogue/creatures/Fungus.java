@@ -9,7 +9,6 @@ public class Fungus extends Creature {
 	}
 
 	public Fungus(World world) {
-		super(world, 'f', AsciiPanel.green, 20, 0, 0);
+		super(world, 'f', AsciiPanel.green, 20, 0, 0, 1, "Fungus");
 	}
-
 }

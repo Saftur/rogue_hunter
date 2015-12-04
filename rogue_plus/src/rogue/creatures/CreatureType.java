@@ -1,5 +1,5 @@
 package rogue.creatures;
 
-public enum Type {
+public enum CreatureType {
 	PLAYER, FUNGUS;
 }
