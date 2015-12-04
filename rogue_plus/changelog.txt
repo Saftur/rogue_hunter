@@ -1,3 +1,5 @@
+0.1.1: Pause
+	* Pause menu
 0.1.0: World
 	* Name signing
 	* World moving
