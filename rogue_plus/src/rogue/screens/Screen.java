@@ -1,6 +1,7 @@
 package rogue.screens;
 
 import java.awt.event.KeyEvent;
+
 import asciiPanel.AsciiPanel;
 
 public interface Screen {

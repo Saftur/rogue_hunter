@@ -1,8 +1,8 @@
 package rogue.screens;
 
 import java.awt.event.KeyEvent;
+
 import asciiPanel.AsciiPanel;
-import fr.FileReader;
 import rogue.ApplicationMain;
 
 public class StartScreen implements Screen {
@@ -67,21 +67,36 @@ public class StartScreen implements Screen {
 		for (int i=0;i<text.length;i++) {
 			terminal.write(text[i], 0, i, AsciiPanel.yellow);
 		}
-		String[] title = new String[]{"  ____                          _   _             _            ",
+		/*String[] title = new String[]{"  ____                          _   _             _            ",
 									  " |  _ \\ ___   __ _ _   _  ___  | | | |_   _ _ __ | |_ ___ _ __ ",
 									  " | |_) / _ \\ / _` | | | |/ _ \\ | |_| | | | | '_ \\| __/ _ \\ '__|",
 									  " |  _ < (_) | (_| | |_| |  __/ |  _  | |_| | | | | ||  __/ |   ",
 									  " |_| \\_\\___/ \\__, |\\__,_|\\___| |_| |_|\\__,_|_| |_|\\__\\___|_|   ",
-									  "             |___/                                             "};
+									  "             |___/                                             "};*/
 		//String[] title = FileReader.readFile("src/rogue/name.txt");
+		String[] title = new String[]{"  ____                              ",
+									  " |  _ \\ ___   __ _ _   _  ___   _   ",
+									  " | |_) / _ \\ / _` | | | |/ _ \\_| |_ ",
+									  " |  _ < (_) | (_| | |_| |  __/_   _|",
+									  " |_| \\_\\___/ \\__, |\\__,_|\\___| |_|  ",
+									  "             |___/                  "};
 		for (int i=0;i<title.length;i++) {
-			terminal.writeCenter(title[i], i+4, AsciiPanel.red);
+			terminal.writeCenter(title[i], i+4, AsciiPanel.brightRed);
 		}
 		terminal.writeCenter("(C) Copyright 2015", 12, AsciiPanel.yellow);
 		terminal.writeCenter("Artificial Dragons, an indie studio", 13, AsciiPanel.brightRed);
 		terminal.writeCenter("All Rights Reserved", 14, AsciiPanel.yellow);
 		terminal.writeCenter("Based on 1983 \"Rogue\" by Artificial Intelligence Design", 17);
-		terminal.writeCenter("Sign your name, and enter the dungeon: ",20,AsciiPanel.green);
+		terminal.writeCenter("Sign your name, and enter the dungeon:", 20, AsciiPanel.green);
+		if (ApplicationMain.pname.length() > 0) {
+			String name_text = ApplicationMain.pname;
+			for (int i=0;i<38-ApplicationMain.pname.length();i++) {
+				name_text += '_';
+			}
+			terminal.writeCenter(name_text, 21, AsciiPanel.brightCyan);
+		} else {
+			terminal.writeCenter("______________________________________", 21, AsciiPanel.brightCyan);
+		}
 	}
 	
 	private void displayVersion(AsciiPanel terminal) {
@@ -94,7 +109,15 @@ public class StartScreen implements Screen {
 	}
 
 	public Screen respondToUserInput(KeyEvent key) {
-		key.getKeyChar();
+		char chr = key.getKeyChar();
+		int code = key.getKeyCode();
+		if (code == KeyEvent.VK_BACK_SPACE && ApplicationMain.pname.length() > 0) {
+			ApplicationMain.pname = ApplicationMain.pname.substring(0,ApplicationMain.pname.length()-1);
+		} else if ((Character.isLetter(chr) || chr == ' ') && ApplicationMain.pname.length() < 38) {
+			ApplicationMain.pname += chr;
+		} else if (code == KeyEvent.VK_ENTER) {
+			return new GameScreen();
+		}
 		return this;
 	}
 	

@@ -1,0 +1,5 @@
+0.1.0: World
+	* Name signing
+	* World moving
+0.0.1: Title
+	* Title screen

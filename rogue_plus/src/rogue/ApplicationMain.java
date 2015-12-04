@@ -3,7 +3,6 @@ package rogue;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileWriter;
 
 import fr.FileReader;
 import asciiPanel.AsciiPanel;
@@ -17,12 +16,12 @@ public class ApplicationMain extends JFrame implements KeyListener {
 	public static String version_text;
 	
 	public static String pname;
+	public static int round_num;
 	
 	private AsciiPanel terminal;
 	private Screen screen;
 	
 	public void keyPressed(KeyEvent e) {
-		System.out.println("key");
         screen = screen.respondToUserInput(e);
         repaint();
 	}
@@ -50,6 +49,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
         for (int i=0;i<3;i++) {
         	version[i] = Integer.parseInt(vt[i]);
         }
+        pname = "";
     	terminal = new AsciiPanel();
     	add(terminal);
     	pack();
