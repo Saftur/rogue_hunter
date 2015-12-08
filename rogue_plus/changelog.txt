@@ -1,3 +1,10 @@
+0.2.0: Biggest update so far
+	* Orc creature
+	* Stat adjustments
+	* Xp/level up adjustments
+	* Lose screen
+	* Dev console
+	* Exit; esc from start menu, Exit from pause menu
 0.1.5: Fight! v2
 	* Xp
 	* Messages

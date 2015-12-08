@@ -3,9 +3,8 @@ package rogue.screens;
 import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
-import rogue.RoguePlus;
 
-public class PauseScreen implements Screen {
+public class LoseScreen implements Screen {
 	private char hrzchr = (char)205;
 	private char vrtchr = (char)186;
 	private char blcchr = (char)187;
@@ -17,10 +16,7 @@ public class PauseScreen implements Screen {
 	private char tlrchr = (char)202;
 	private char blrchr = (char)203;*/
 	
-	private Screen lastScreen;
-	
-	private int option;
-	private String[] options = new String[]{"Resume"/*,"Settings"*/,"Menu", "Exit"};
+	private boolean select = true;
 	
 	public void displayFrame(AsciiPanel terminal) {
 		String text[] = new String[23];
@@ -53,38 +49,32 @@ public class PauseScreen implements Screen {
 	}
 	
 	public void displayOptions(AsciiPanel terminal) {
-		for (int i=0;i<options.length;i++) {
-			if (option == i) {
-				terminal.writeCenter(options[i], i+5, null, AsciiPanel.brightBlack);
-			} else {
-				terminal.writeCenter(options[i], i+5);
-			}
+		terminal.writeCenter("Play Again?", 8);
+		if (select) {
+			terminal.write("Yes", 34, 11, null, AsciiPanel.brightBlack);
+			terminal.write("No", 44, 11);
+		} else {
+			terminal.write("Yes         ", 34, 11);
+			terminal.write("No", 44, 11, null, AsciiPanel.brightBlack);
 		}
 	}
 	
 	public void displayOutput(AsciiPanel terminal) {
 		displayFrame(terminal);
-		terminal.writeCenter("Pause Menu", 3);
+		terminal.writeCenter("Game Over", 3);
 		displayOptions(terminal);
 	}
-
+	
 	public Screen respondToUserInput(KeyEvent key) {
 		switch (key.getKeyCode()) {
-		case KeyEvent.VK_UP: option = option == 0 ? options.length-1 : option-1; break;
-		case KeyEvent.VK_DOWN: option = option == options.length-1 ? 0 : option+1; break;
+		case KeyEvent.VK_LEFT: case KeyEvent.VK_RIGHT: select = select ? false : true; break;
 		case KeyEvent.VK_SPACE: case KeyEvent.VK_ENTER:
-			switch (option) {
-			case 0: return lastScreen;
-			//case 1: return new SettingsScreen(this);
-			case 1: return new StartScreen();
-			case 2: RoguePlus.exit();
-			} break;
-		case KeyEvent.VK_ESCAPE: return lastScreen;
+			if (select)
+				return new GameScreen();
+			else
+				return new StartScreen();
 		}
 		return this;
 	}
-	
-	public PauseScreen(Screen lastScreen) {
-		this.lastScreen = lastScreen;
-	}
+
 }

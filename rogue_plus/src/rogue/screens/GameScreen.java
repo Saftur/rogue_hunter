@@ -6,7 +6,8 @@ import asciiPanel.AsciiPanel;
 
 import rogue.RoguePlus;
 import rogue.creatures.Creature;
-import rogue.creatures.Factory;
+import rogue.creatures.Fungus;
+import rogue.creatures.Orc;
 import rogue.creatures.Player;
 import rogue.world.GenType;
 import rogue.world.World;
@@ -24,8 +25,9 @@ public class GameScreen implements Screen {
 	private char tlrchr = (char)202;
 	private char blrchr = (char)203;*/
 	
-	private World world;
-	private Player player;
+	public World world;
+	public Player player;
+	
 	private int screenWidth;
 	private int screenHeight;
 	private int width;
@@ -39,8 +41,19 @@ public class GameScreen implements Screen {
 		width = 90;
 		height = 30;
 		world = new World(GenType.CAVE, width, height);
-		Factory.spawn(world, CreatureType.FUNGUS, 10);
-		player = new Player(world, '@', AsciiPanel.brightYellow);
+		player = new Player(world);
+		spawn(world, CreatureType.FUNGUS, 40);
+		spawn(world, CreatureType.ORC, 5);
+	}
+	
+	public void spawn(World world, CreatureType type, int num) {
+		for (int i=0;i<num;i++) {
+			if (type == CreatureType.FUNGUS) {
+				world.addCreature(new Fungus(world, player));
+			} else if (type == CreatureType.ORC) {
+				world.addCreature(new Orc(world, player));
+			}
+		}
 	}
 	
 	public int getScrollX() {
@@ -105,8 +118,8 @@ public class GameScreen implements Screen {
 		terminal.write("Level:"+level, 1, 21, level > 30 ? AsciiPanel.brightRed : AsciiPanel.brightWhite);
 		String pn = RoguePlus.pname;
 		terminal.write(pn+":", 13, 20, AsciiPanel.brightCyan);
-		terminal.write("HP : "+player.hp+"/"+player.maxHp, 13, 21, AsciiPanel.brightWhite);
-		terminal.write("A/D: "+player.attackValue+"/"+player.defenseValue, 13, 22, AsciiPanel.brightWhite);
+		terminal.write("HP : "+(int)player.hp+"/"+(int)player.maxHp, 13, 21, AsciiPanel.brightWhite);
+		terminal.write("A/D: "+(int)player.atk+"/"+(int)player.def, 13, 22, AsciiPanel.brightWhite);
 		terminal.write("Exp: "+player.level+"("+player.xp+"/"+player.xpToLvlUp+")", 13, 23, AsciiPanel.brightWhite);
 		displayMessages(terminal);
 	}
@@ -122,6 +135,7 @@ public class GameScreen implements Screen {
 	}
 	
 	public Screen respondToUserInput(KeyEvent key) {
+		int rn_change = 0;
 		switch (key.getKeyCode()){
         case KeyEvent.VK_LEFT:
         case KeyEvent.VK_H: player.move(-1, 0); break;
@@ -136,9 +150,17 @@ public class GameScreen implements Screen {
         case KeyEvent.VK_B: player.move(-1, 1); break;
         case KeyEvent.VK_N: player.move( 1, 1); break;
         case KeyEvent.VK_ESCAPE: return new PauseScreen(this);
-        default: RoguePlus.round_num--;
+        case KeyEvent.VK_SLASH: return new CmdScreen(this, world, player);
+        default: rn_change--;
         }
-		RoguePlus.round_num++;
-		return this;
+		rn_change++;
+		RoguePlus.round_num += rn_change;
+		if (rn_change > 0) {
+			world.update();
+		}
+		if (player.hp <= 0)
+			return new LoseScreen();
+		else
+			return this;
 	}
 }

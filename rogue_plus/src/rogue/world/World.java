@@ -22,6 +22,12 @@ public class World {
 		creatures = new ArrayList<Creature>();
 		messages = new ArrayList<String>();
 	}
+	
+	public void update() {
+		for (int i=0;i < creatures.size();i++) {
+			creatures.get(i).update();
+		}
+	}
     
     public Tile tile(int x, int y){
         if (x < 0 || x >= width || y < 0 || y >= height)

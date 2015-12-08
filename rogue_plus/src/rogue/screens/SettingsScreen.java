@@ -33,23 +33,19 @@ public class SettingsScreen implements Screen {
 		for (int i=0;i<76;i++) {
 			text[n] += hrzchr;
 		}
-		text[n] += blcchr;//+' ';
+		text[n] += blcchr;
 		for (n++;n<22;n++) {
 			text[n] = " "+vrtchr;
 			for (int i=0;i<76;i++) {
 				text[n] += ' ';
 			}
-			text[n] += vrtchr;//+' ';
+			text[n] += vrtchr;
 		}
 		text[n] = " "+trcchr;
 		for (int i=0;i<76;i++) {
 			text[n] += hrzchr;
 		}
-		text[n] += tlcchr;//+' ';
-		/*text[23] = "";
-		for (int i=0;i<80;i++) {
-			text[23] += ' ';
-		}*/
+		text[n] += tlcchr;
 		for (int i=0;i<text.length;i++) {
 			terminal.write(text[i], 0, i, AsciiPanel.yellow);
 		}

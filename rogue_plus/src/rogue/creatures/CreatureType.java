@@ -1,5 +1,5 @@
 package rogue.creatures;
 
 public enum CreatureType {
-	PLAYER, FUNGUS;
+	PLAYER, FUNGUS, ORC;
 }
