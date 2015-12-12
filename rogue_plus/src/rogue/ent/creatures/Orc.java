@@ -1,4 +1,4 @@
-package rogue.creatures;
+package rogue.ent.creatures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import rogue.world.Tile;
 import rogue.world.World;
 
 public class Orc extends Creature {
-	private int[] lm = {0,0};
+	//private int[] lm = {0,0};
 	
 	public void update() {
 		if (this.distanceTo(player) < 8) {
@@ -68,10 +68,10 @@ public class Orc extends Creature {
 				my = -oldmy;
 			}
 			
-			lm = new int[]{mx, my};
+			//lm = new int[]{mx, my};
 			move(mx, my);
 		} else {
-			lm = new int[]{0,0};
+			//lm = new int[]{0,0};
 			List<int[]> dirs = new ArrayList<int[]>();
 			for (int my=-1;my<2;my++) {
 				for (int mx=-1;mx<2;mx++) {

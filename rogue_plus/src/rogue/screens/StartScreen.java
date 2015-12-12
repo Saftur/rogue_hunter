@@ -74,7 +74,7 @@ public class StartScreen implements Screen {
 		}
 		terminal.writeCenter("(C) Copyright 2015", 12, AsciiPanel.yellow);
 		terminal.writeCenter("ABSolute Productions, an indie studio", 13, AsciiPanel.brightRed);
-		terminal.writeCenter("All Rights Reserved", 14, AsciiPanel.yellow);
+		terminal.writeCenter("All Rights Reserved (I think)", 14, AsciiPanel.yellow);
 		terminal.writeCenter("Based on 1983 \"Rogue\" by Artificial Intelligence Design", 17);
 		terminal.writeCenter("Sign your name, and enter the dungeon:", 20, AsciiPanel.green);
 		String name_text = RoguePlus.pname;

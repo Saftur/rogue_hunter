@@ -3,6 +3,7 @@ package rogue;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 import fr.FileReader;
 import asciiPanel.AsciiPanel;
@@ -19,7 +20,7 @@ public class RoguePlus extends JFrame implements KeyListener {
 		System.exit(0);
 	}
 	
-	public static int[] version = new int[3];
+	//public static int[] version = new int[3];
 	public static String version_text;
 	
 	public static String pname;
@@ -27,6 +28,10 @@ public class RoguePlus extends JFrame implements KeyListener {
 	
 	private AsciiPanel terminal;
 	private Screen screen;
+	
+	public void changeScreen(Screen screen) {
+		this.screen = screen;
+	}
 	
 	public static boolean shift;
 	
@@ -48,24 +53,33 @@ public class RoguePlus extends JFrame implements KeyListener {
     
     public RoguePlus() {
     	super();
-    	char[] lastVersion = FileReader.readFileChar("changelog.txt");
-    	String[] vt = new String[]{"","",""};
-        version_text = "";
-        shift = false;
-        int pos = 0;
-        for (char c : lastVersion) {
-        	if (c == '.' && pos < 2) {
-        		pos++;
-        	} else if (c == ':') {
-        		break;
-        	} else {
-        		vt[pos] += c;
-        	}
-        	version_text += c;
-        }
-        for (int i=0;i<3;i++) {
-        	version[i] = Integer.parseInt(vt[i]);
-        }
+    	//File changelog = new File("changelog.txt");
+    	String clname = "changelog.txt";
+    	if (!new File(clname).exists()) {
+    		clname = "../changelog.txt";
+    	}
+    	if (new File(clname).exists()) {
+	    	char[] clChar = FileReader.readFileChar(clname);
+	    	String[] vt = new String[]{"","",""};
+	        version_text = "";
+	        shift = false;
+	        int pos = 0;
+	        for (char c : clChar) {
+	        	if (c == '.' && pos < 2) {
+	        		pos++;
+	        	} else if (c == ':') {
+	        		break;
+	        	} else {
+	        		vt[pos] += c;
+	        	}
+	        	version_text += c;
+	        }
+	        /*for (int i=0;i<3;i++) {
+	        	version[i] = Integer.parseInt(vt[i]);
+	        }*/
+    	} else {
+    		version_text = "changelog.txt was not found";
+    	}
         pname = "";
     	terminal = new AsciiPanel();
     	add(terminal);

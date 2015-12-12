@@ -1,4 +1,4 @@
-package rogue.creatures;
+package rogue.ent.creatures;
 
 import asciiPanel.AsciiPanel;
 import rogue.world.World;

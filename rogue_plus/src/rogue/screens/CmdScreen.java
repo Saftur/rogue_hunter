@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 
 import rogue.RoguePlus;
-import rogue.creatures.Player;
+import rogue.ent.creatures.Player;
 import rogue.world.World;
 
 public class CmdScreen implements Screen {
@@ -95,8 +95,14 @@ public class CmdScreen implements Screen {
 		case "def":
 			player.def = n();
 			break;
+		case "level":
+			player.level = n();
+			break;
 		case "xp":
 			player.xp = n();
+			break;
+		case "gold":
+			player.gold = n();
 			break;
 		default: return false;
 		}
@@ -116,7 +122,7 @@ public class CmdScreen implements Screen {
 			if (intype == CmdInType.CMD) {
 				switch (cmd) {
 				case "move": /*case "fungus":*/ intype = CmdInType.XY; break;
-				case "hp": case "atk": case "def": case "xp": intype = CmdInType.N; break;
+				case "hp": case "atk": case "def": case "level": case "xp": intype = CmdInType.N; break;
 				default: world.message("Illegal command '"+cmd+"'");
 				}
 			}

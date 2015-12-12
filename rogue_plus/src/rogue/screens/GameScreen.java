@@ -1,17 +1,23 @@
 package rogue.screens;
 
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import asciiPanel.AsciiPanel;
 
 import rogue.RoguePlus;
-import rogue.creatures.Creature;
-import rogue.creatures.Fungus;
-import rogue.creatures.Orc;
-import rogue.creatures.Player;
+import rogue.ent.Factory;
+import rogue.ent.creatures.Creature;
+import rogue.ent.creatures.Fungus;
+import rogue.ent.creatures.Orc;
+import rogue.ent.creatures.Player;
+import rogue.ent.items.Item;
+import rogue.ent.items.Gold;
+import rogue.ent.items.HealthPotion;
 import rogue.world.GenType;
 import rogue.world.World;
-import rogue.creatures.CreatureType;
 
 public class GameScreen implements Screen {
 	private char hrzchr = (char)205;
@@ -28,11 +34,27 @@ public class GameScreen implements Screen {
 	public World world;
 	public Player player;
 	
+	public Factory factory;
+	
 	private int screenWidth;
 	private int screenHeight;
 	private int width;
 	private int height;
 	private int level = 1;
+	
+	private static void potionColors() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+		List<String> colors = new ArrayList<String>();
+		colors.add("Red");
+		colors.add("Blue");
+		colors.add("Grey");
+		colors.add("Purple");
+		final Class<?>[] potions = new Class<?>[]{HealthPotion.class};
+		for (Class<?> potion : potions) {
+			int randnum = (int)(Math.random()*colors.size()); 
+			potion.getMethod("setPColor", new Class[]{String.class}).invoke(null, new Object[]{colors.get(randnum)});
+			colors.remove(randnum);
+		}
+	}
 	
 	public GameScreen() {
 		RoguePlus.round_num = 0;
@@ -42,18 +64,19 @@ public class GameScreen implements Screen {
 		height = 30;
 		world = new World(GenType.CAVE, width, height);
 		player = new Player(world);
-		spawn(world, CreatureType.FUNGUS, 40);
-		spawn(world, CreatureType.ORC, 5);
-	}
-	
-	public void spawn(World world, CreatureType type, int num) {
-		for (int i=0;i<num;i++) {
-			if (type == CreatureType.FUNGUS) {
-				world.addCreature(new Fungus(world, player));
-			} else if (type == CreatureType.ORC) {
-				world.addCreature(new Orc(world, player));
-			}
+		factory = new Factory(world, player);
+		try {
+			potionColors();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		/*factory.spawn(CreatureType.FUNGUS, 40);
+		factory.spawn(CreatureType.ORC, 5);
+		factory.addpotion(5, 20);*/
+		factory.spawn(Fungus.class, 40);
+		factory.spawn(Orc.class, 5);
+		factory.additem(HealthPotion.class, 5, 16, 21);
+		factory.additem(Gold.class, 5, 5, 20);
 	}
 	
 	public int getScrollX() {
@@ -64,12 +87,13 @@ public class GameScreen implements Screen {
 	    return Math.max(0, Math.min(player.y - screenHeight / 2, world.height - screenHeight));
 	}
 	
-	public void displayTiles(AsciiPanel terminal, int left, int top) {
+	private void displayTiles(AsciiPanel terminal, int left, int top) {
 		for (int y=0;y<screenHeight;y++) {
 			for (int x=0;x<screenWidth;x++) {
 				int nx = x+left;
 				int ny = y+top;
 				
+				//if (world.glyph(nx, ny) == '*') System.out.println("Gold");
 				terminal.write(world.glyph(nx, ny), x, y, world.color(nx, ny));
 			}
 		}
@@ -79,6 +103,14 @@ public class GameScreen implements Screen {
 		for (Creature creature : world.creatures) {
 			if (creature.x >= left && creature.x < left+screenWidth && creature.y >= top && creature.y < top+screenHeight) {
 				terminal.write(creature.glyph, creature.x - left, creature.y - top, creature.color);
+			}
+		}
+	}
+	
+	private void displayItems(AsciiPanel terminal, int left, int top) {
+		for (Item item : world.items) {
+			if (item.x >= left && item.x < left+screenWidth && item.y >= top && item.y < top+screenHeight) {
+				terminal.write(item.glyph, item.x - left, item.y - top, item.color);
 			}
 		}
 	}
@@ -116,6 +148,7 @@ public class GameScreen implements Screen {
 			terminal.write(frame[i], 0, i+20, AsciiPanel.brightBlue);
 		}
 		terminal.write("Level:"+level, 1, 21, level > 30 ? AsciiPanel.brightRed : AsciiPanel.brightWhite);
+		terminal.write("Gold:"+player.gold, 1, 23, AsciiPanel.brightYellow);
 		String pn = RoguePlus.pname;
 		terminal.write(pn+":", 13, 20, AsciiPanel.brightCyan);
 		terminal.write("HP : "+(int)player.hp+"/"+(int)player.maxHp, 13, 21, AsciiPanel.brightWhite);
@@ -129,6 +162,7 @@ public class GameScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
+        displayItems(terminal, left, top);
         displayCreatures(terminal, left, top);
         terminal.write(player.glyph, player.x - left, player.y - top, player.color);
         displayStatus(terminal);
@@ -137,18 +171,21 @@ public class GameScreen implements Screen {
 	public Screen respondToUserInput(KeyEvent key) {
 		int rn_change = 0;
 		switch (key.getKeyCode()){
-        case KeyEvent.VK_LEFT:
-        case KeyEvent.VK_H: player.move(-1, 0); break;
-        case KeyEvent.VK_RIGHT:
-        case KeyEvent.VK_L: player.move( 1, 0); break;
-        case KeyEvent.VK_UP:
-        case KeyEvent.VK_K: player.move( 0,-1); break;
-        case KeyEvent.VK_DOWN:
-        case KeyEvent.VK_J: player.move( 0, 1); break;
-        case KeyEvent.VK_Y: player.move(-1,-1); break;
+        //case KeyEvent.VK_H:
+        case KeyEvent.VK_LEFT: player.move(-1, 0); break;
+        //case KeyEvent.VK_L:
+        case KeyEvent.VK_RIGHT: player.move( 1, 0); break;
+        //case KeyEvent.VK_K:
+        case KeyEvent.VK_UP: player.move( 0,-1); break;
+        //case KeyEvent.VK_J:
+        case KeyEvent.VK_DOWN: player.move( 0, 1); break;
+        /*case KeyEvent.VK_Y: player.move(-1,-1); break;
         case KeyEvent.VK_U: player.move( 1,-1); break;
         case KeyEvent.VK_B: player.move(-1, 1); break;
-        case KeyEvent.VK_N: player.move( 1, 1); break;
+        case KeyEvent.VK_N: player.move( 1, 1); break;*/
+        case KeyEvent.VK_P: if (!player.takeItem()) rn_change--; break;
+        case KeyEvent.VK_I: return new PackScreen(this, player);//player.listPack(); rn_change--; break;
+        case KeyEvent.VK_U: return new ItemSelectScreen(this, player, world, "use");
         case KeyEvent.VK_ESCAPE: return new PauseScreen(this);
         case KeyEvent.VK_SLASH: return new CmdScreen(this, world, player);
         default: rn_change--;

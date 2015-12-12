@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import rogue.ent.creatures.Creature;
+import rogue.ent.items.Item;
 import rogue.world.Tile;
-import rogue.creatures.Creature;
 
 public class World {
 	private Tile[][] tiles;
@@ -13,6 +14,8 @@ public class World {
 	public int height;
 	
 	public List<Creature> creatures;
+	public List<Item> items;
+	
 	public List<String> messages;
 	
 	public World(GenType type, int width, int height) {
@@ -20,6 +23,7 @@ public class World {
 		this.height = height;
 		tiles = Gen.gen(type, width, height);
 		creatures = new ArrayList<Creature>();
+		items = new ArrayList<Item>();
 		messages = new ArrayList<String>();
 	}
 	
@@ -52,17 +56,33 @@ public class World {
         return null;
     }
     
+	public Item item(int x, int y){
+    	for (Item i : items){
+        	if (i.x == x && i.y == y)
+            	return i;
+    	}
+    	return null;
+	}
+    
     public void dig(int x, int y) {
         if (tile(x,y).isDiggable())
             tiles[y][x] = Tile.FLOOR;
     }
     
-    public void addCreature(Creature creature){
+    public void addCreature(Creature creature) {
         creatures.add(creature);
+    }
+    
+    public void addItem(Item item) {
+    	items.add(item);
     }
 
 	public void remove(Creature creature) {
 		creatures.remove(creature);
+	}
+	
+	public void remove(Item item) {
+		items.remove(item);
 	}
 	
 	public void message(String text) {
