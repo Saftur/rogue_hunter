@@ -14,6 +14,9 @@ Welcome to Rogue+! You are a rogue, bravely venturing dangerous dungeons in sear
 Requirements:
 I think all you need is the latest version of Java: https://java.com/en/
 
+How to Play:
+Open “rogue_plus.jar” to start.
+
 Screen:
 Stats are shown at the bottom of the screen. ‘Level’ is which dungeon level you are on, for player level look at number before parentheses after ‘XP’.
 
