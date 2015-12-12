@@ -38,6 +38,3 @@ hp, ask, def, level, xp, gold - set corresponding value (‘level’ corresponds
 
 Credits:
 All programming done by ABSolute Productions (which at the moment is only me, Arthur Bouvier). Original idea is from 1983 “Rogue” by Artificial Intelligence Design. Graphics are made using AsciiPanel library (https://github.com/trystan/AsciiPanel).
-
-Note:
-Version display uses changelog.txt file. Please don’t move, delete, or change it.

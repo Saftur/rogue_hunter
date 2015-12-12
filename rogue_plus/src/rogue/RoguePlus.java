@@ -78,7 +78,7 @@ public class RoguePlus extends JFrame implements KeyListener {
 	        	version[i] = Integer.parseInt(vt[i]);
 	        }*/
     	} else {
-    		version_text = "changelog.txt was not found";
+    		version_text = "0.2.5";
     	}
         pname = "";
     	terminal = new AsciiPanel();
